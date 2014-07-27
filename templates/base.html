@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}"/>
+		
+		<script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+		<title>Network Downloader</title>
+	</head>
+	<body>
+		<center>
+			<div id="body">
+				<h1>Network Downloader</h1>
+				<div id="downloadQueue">
+				</div>
+			</div>
+			<div class="addDownloadModal">
+				<form id="ftp">
+					<input type="text" name="url">
+					<input type="submit" value="Add to queue">
+				</form>
+				<form id="tor">
+					<input type="file" name="file">
+					<input type="submit" value="Add to queue">
+				</form>
+			</div>
+		</center>
+		<footer>
+			<script>
+				$(document).ready(function(){
+					//set this on a timer?
+					$.ajax({
+						url: './downloadQueue',
+						cache: false
+					}).done(function(text){
+						$("#downloadQueue").html(text);
+						
+					});
+					
+					
+					
+				});
+			</script>
+		</footer>
+	</body>
+</html>
