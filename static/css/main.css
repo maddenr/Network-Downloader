@@ -1,0 +1,26 @@
+body {
+	background-color: rgba(0,0,0,.4);
+}
+input {
+	margin: 0px !important;
+}
+#addDownloadModal {
+	background-color: rgba(0,0,0,.8);
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#addDownloadModal > form {
+	background-color: rgba(245, 245, 245, .8);
+	border-radius: 5px;
+	width: 50%;
+	border: solid 1px #000;
+	padding: 50px 50px 50px 50px;
+}
+#downloadQueue {
+	width: 50%;
+}
+.hidden {
+	display: none;
+}

@@ -3,7 +3,7 @@
 	<head>
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
-		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"/>
 		
 		<script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
@@ -15,16 +15,33 @@
 				<h1>Network Downloader</h1>
 				<div id="downloadQueue">
 				</div>
+				<button class="modalShow">Add Download</button>
 			</div>
-			<div class="addDownloadModal">
-				<form id="ftp">
-					<input type="text" name="url">
+			<div id="addDownloadModal" class="hidden">
+				<br>
+				<br>
+				<form id="ftp" class="center" action="/addToQueue/ftp/" method="post">
+					<h4>
+						FTP Download
+					</h4>
+					<label>URL:<input type="text" name="url"></label>
+					<label>File name:<input type="text" name="fileName"></label>
 					<input type="submit" value="Add to queue">
 				</form>
-				<form id="tor">
-					<input type="file" name="file">
+				<br>
+				<br>
+				<form id="tor" class="center" action="/addToQueue/tor/" method="post">
+					<h4>
+						Torrent Download
+					</h4>
+					<input type="file" name="file" value="">
 					<input type="submit" value="Add to queue">
 				</form>
+				<br>
+				<br>
+				<button class="modalShow">Hide</button>
+				<br>
+				<br>
 			</div>
 		</center>
 		<footer>
@@ -38,8 +55,12 @@
 						$("#downloadQueue").html(text);
 						
 					});
-					
-					
+					$('.modalShow').each(function(){
+						$(this).on('click', function(){
+							$("#addDownloadModal").toggle();
+						
+						});
+					});
 					
 				});
 			</script>
