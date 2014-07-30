@@ -1,16 +1,16 @@
 from flask import Flask, render_template, url_for, send_from_directory, redirect, request
 import os
 from werkzeug.utils import secure_filename
-from os.path import isfile
+from os.path import isfile, join
 
-ALLOWED_EXTENSIONS = set(['tor'])
+ALLOWED_EXTENSIONS = set(['torrent'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './torQueue/'
 ftpQueuePath = './ftpDownloadQueue/'
 torQueuePath = './torDownloadQueue/'
 ftpCurrentDownload = 'currentFTP.txt'
 torCurrentDownload = 'currentTOR.txt'
+downloadsFolder = './Downloads/'
 
 @app.route("/")
 def index():
@@ -21,6 +21,7 @@ def downloadQueue():
 	#poll for downloads
 	ftpDownloads = os.listdir(ftpQueuePath)
 	torDownloads = os.listdir(torQueuePath)
+	downloads = os.listdir(downloadsFolder)
 	if isfile(ftpCurrentDownload):
 		with open(ftpCurrentDownload, "r") as currentFtpFile:
 			curFtp = currentFtpFile.read()
@@ -34,15 +35,15 @@ def downloadQueue():
 		curTor = None
 	
 	return render_template("Download Queue.html", num_tor = len(torDownloads), num_ftp = len(ftpDownloads),
-					cur_ftp = curFtp, cur_tor = curTor, ftpDownloads = ftpDownloads, torDownloads = torDownloads)
+					cur_ftp = curFtp, cur_tor = curTor, ftpDownloads = ftpDownloads, torDownloads = torDownloads, num_dl=len(downloads), downloads=downloads)
 
 @app.route("/addToQueue/ftp/", methods=['POST'])
 def addToFtpQueue():
 	if request is None:
 		return redirect("/?404")
-	print request.form['url']
-	#with open(ftpQueuePath+ NAME+".txt", "w+") as file:
-		#file.write(FTPURL)
+	print ftpQueuePath+request.form['fileName']+".txt"
+	with open(ftpQueuePath+request.form['fileName']+".txt", "w+") as file:
+		file.write(request.form['url'])
 	return redirect("/")
 
 @app.route("/addToQueue/tor/", methods=['POST'])
@@ -51,7 +52,7 @@ def addToTorQueue():
 		file = request.files['file']
 		if allowed_file(file.filename):
 			filename = secure_filename(file.filename)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			file.save(join(torQueuePath, filename))
 		else:
 			return redirect("/?error=406")
 	else:

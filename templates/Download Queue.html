@@ -2,7 +2,7 @@
 <br>
 <h2>Current FTP: {{ cur_ftp }}</h2>
 <br>
-
+<h4>Torrent Queue</h4>
 <table class="table table-striped table-bordered">
 <thead>
 	<th>#</th>
@@ -20,6 +20,7 @@
 {% endfor %}
 </table>
 <br>
+<h4>FTP Queue</h4>
 <table class="table table-striped table-bordered">
 <thead>
 	<th>#</th>
@@ -31,7 +32,25 @@
 			{{ j+1 }}
 		</td>
 		<td>
-			{{ ftpDownloads[i] }}
+			{{ ftpDownloads[j][:-4] }}
+		</td>
+	</tr>
+{% endfor %}
+</table>
+<br>
+<h4>Download Folder</h4>
+<table class="table table-striped table-bordered">
+<thead>
+	<th>#</th>
+	<th>Name</th>
+</thead>
+{% for k in range(num_dl) %}
+    <tr>
+		<td>
+			{{ k+1 }}
+		</td>
+		<td>
+			{{ downloads[k] }}
 		</td>
 	</tr>
 {% endfor %}

@@ -7,12 +7,13 @@ input {
 #addDownloadModal {
 	background-color: rgba(0,0,0,.8);
 	width: 100%;
+	height: 100%;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 }
 #addDownloadModal > form {
-	background-color: rgba(245, 245, 245, .8);
+	background-color: rgba(245, 245, 245, 1);
 	border-radius: 5px;
 	width: 50%;
 	border: solid 1px #000;

@@ -24,17 +24,17 @@
 					<h4>
 						FTP Download
 					</h4>
-					<label>URL:<input type="text" name="url"></label>
-					<label>File name:<input type="text" name="fileName"></label>
+					<label>URL:<input type="text" name="url" required></label>
+					<label>File name:<input type="text" name="fileName" required></label>
 					<input type="submit" value="Add to queue">
 				</form>
 				<br>
 				<br>
-				<form id="tor" class="center" action="/addToQueue/tor/" method="post">
+				<form id="tor" class="center" action="/addToQueue/tor/" method="post" enctype=multipart/form-data>
 					<h4>
 						Torrent Download
 					</h4>
-					<input type="file" name="file" value="">
+					<input type="file" name="file" value="" required>
 					<input type="submit" value="Add to queue">
 				</form>
 				<br>

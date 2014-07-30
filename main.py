@@ -12,6 +12,7 @@ ftpQueuePath = './ftpDownloadQueue/'
 torQueuePath = './torDownloadQueue/'
 ftpCurrentDownload = 'currentFTP.txt'
 torCurrentDownload = 'currentTOR.txt'
+downloadsFolder = './Downloads/'
 
 def ftpThread():
 	try:
@@ -27,7 +28,7 @@ def ftpThread():
 					with open(ftpCurrentDownload, "w+") as file:
 						file.write(fileName[:-4])
 					print ("Retrieving: %s\tAs: %s" % (ftpUrl, fileName[:-4]))
-					urllib.urlretrieve(ftpUrl, fileName[:-4])#trims .txt ending to file name. save as blah.zip.txt
+					urllib.urlretrieve(ftpUrl, downloadsFolder+fileName[:-4])#trims .txt ending to file name. save as blah.zip.txt
 					os.remove(ftpCurrentDownload)
 					print "Finished"
 			else:
@@ -48,10 +49,10 @@ def torThread():
 				for fileName in torQueue:
 					ti = lt.torrent_info(path.abspath(torQueuePath+fileName))
 					print ("Retrieving: %s" % ti)
-					torrent = ses.add_torrent({'ti' : ti, 'save_path' : './'})
+					torrent = ses.add_torrent({'ti' : ti, 'save_path' : downloadsFolder})
 					os.remove(torQueuePath+fileName)
 					with open(torCurrentDownload, "w+") as file:
-						#file.write(fileName[:-4])
+						file.write(fileName[:-4])
 					while (not torrent.is_seed()):
 						sleep(1)
 					os.remove(torCurrentDownload)
@@ -68,13 +69,16 @@ def serverThread():
 
 		
 def main():
-	#ftpProcess = Thread(target=ftpThread)
-	#torProcess = Thread(target=torThread)
-	#serverProcess = Thread(target=serverThread)
-	torThread()
-	#ftpProcess.start()
+	ftpProcess = Thread(target=ftpThread)
+	torProcess = Thread(target=torThread)
 	
+	ftpProcess.start()
+	sleep(1)
+	torProcess.start()
+	NDS.start()
 	
+if __name__ == '__main__':
+	main()
 	
 	
 	
