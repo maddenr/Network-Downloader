@@ -2,7 +2,11 @@ import urllib
 import NDS
 from threading import Thread
 import os
+import os.path as path
 from time import sleep
+import libtorrent as lt
+import sys
+
 
 ftpQueuePath = './ftpDownloadQueue/'
 torQueuePath = './torDownloadQueue/'
@@ -25,6 +29,7 @@ def ftpThread():
 					print ("Retrieving: %s\tAs: %s" % (ftpUrl, fileName[:-4]))
 					urllib.urlretrieve(ftpUrl, fileName[:-4])#trims .txt ending to file name. save as blah.zip.txt
 					os.remove(ftpCurrentDownload)
+					print "Finished"
 			else:
 				print "sleeping..."
 				sleep(10)
@@ -34,12 +39,29 @@ def ftpThread():
 
 		
 def torThread():
-	try:
-		while True:
-			for file in os.listdir(torQueuePath):
-				print ""
-	except Exception as e:
-		print ("Torrent Error:	%s" % e)
+	ses = lt.session()
+	ses.listen_on(6881, 6891)
+	while True:
+		torQueue = os.listdir(torQueuePath)
+		try:
+			if torQueue != []:
+				for fileName in torQueue:
+					ti = lt.torrent_info(path.abspath(torQueuePath+fileName))
+					print ("Retrieving: %s" % ti)
+					torrent = ses.add_torrent({'ti' : ti, 'save_path' : './'})
+					os.remove(torQueuePath+fileName)
+					with open(torCurrentDownload, "w+") as file:
+						#file.write(fileName[:-4])
+					while (not torrent.is_seed()):
+						sleep(1)
+					os.remove(torCurrentDownload)
+					print "Finished"
+			else:
+				print "sleeping..."
+				sleep(10)
+		except Exception as e:
+			print ("Error in torrent: %s" % e)
+					
 		
 def serverThread():
 	NDS.start()
@@ -49,5 +71,18 @@ def main():
 	#ftpProcess = Thread(target=ftpThread)
 	#torProcess = Thread(target=torThread)
 	#serverProcess = Thread(target=serverThread)
-	ftpThread()
+	torThread()
 	#ftpProcess.start()
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
